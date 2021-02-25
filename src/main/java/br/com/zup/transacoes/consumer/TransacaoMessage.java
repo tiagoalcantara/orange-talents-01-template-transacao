@@ -1,4 +1,4 @@
-package br.com.zup.transacoes;
+package br.com.zup.transacoes.consumer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

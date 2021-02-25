@@ -1,5 +1,7 @@
-package br.com.zup.transacoes;
+package br.com.zup.transacoes.consumer;
 
+import br.com.zup.transacoes.Transacao;
+import br.com.zup.transacoes.TransacaoRepository;
 import org.apache.kafka.common.errors.InvalidTopicException;
 import org.apache.kafka.common.errors.SerializationException;
 import org.slf4j.Logger;
@@ -15,7 +17,12 @@ import java.util.List;
 @Component
 public class TransacaoListener {
 
+    private final TransacaoRepository transacaoRepository;
     private final Logger log = LoggerFactory.getLogger(TransacaoListener.class);
+
+    public TransacaoListener(TransacaoRepository transacaoRepository) {
+        this.transacaoRepository = transacaoRepository;
+    }
 
     @KafkaListener(topics = "${spring.kafka.topic.transactions}")
     public void ouvir(TransacaoMessage transacaoMessage,
@@ -27,8 +34,17 @@ public class TransacaoListener {
         System.out.println("Partition: " + partitions.get(0));
         System.out.println("Topic: " + topics.get(0));
         System.out.println("Offset: " + offset.get(0));
-        System.out.println("-----------------------------");
 
+        Transacao transacao = new Transacao(transacaoMessage.getValor(),
+                                            transacaoMessage.getCartao().getId(),
+                                            transacaoMessage.getEfetivadaEm(),
+                                            transacaoMessage.getEstabelecimento().getNome());
+
+        transacaoRepository.save(transacao);
+
+        log.info("Transação salva: {}", transacao.getId());
+
+        System.out.println("-----------------------------");
     }
 
     @ExceptionHandler({InvalidTopicException.class})

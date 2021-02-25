@@ -1,4 +1,4 @@
-package br.com.zup.transacoes;
+package br.com.zup.transacoes.consumer;
 
 public class EstabelecimentoMessage {
     private String nome;

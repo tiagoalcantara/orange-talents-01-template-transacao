@@ -1,4 +1,4 @@
-package br.com.zup.transacoes;
+package br.com.zup.transacoes.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
