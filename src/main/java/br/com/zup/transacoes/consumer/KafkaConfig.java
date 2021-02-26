@@ -1,5 +1,7 @@
 package br.com.zup.transacoes.consumer;
 
+import io.micrometer.core.instrument.ImmutableTag;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -8,17 +10,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.MicrometerConsumerListener;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 public class KafkaConfig {
     private final KafkaProperties kafkaProperties;
+    private final MeterRegistry meterRegistry;
 
-    public KafkaConfig(KafkaProperties kafkaProperties) {
+    public KafkaConfig(KafkaProperties kafkaProperties, MeterRegistry meterRegistry) {
         this.kafkaProperties = kafkaProperties;
+        this.meterRegistry = meterRegistry;
     }
 
     public Map<String, Object> consumerConfigurations() {
@@ -37,7 +43,15 @@ public class KafkaConfig {
         StringDeserializer stringDeserializer = new StringDeserializer();
         JsonDeserializer<TransacaoMessage> jsonDeserializer = new JsonDeserializer<>(TransacaoMessage.class, false);
 
-        return new DefaultKafkaConsumerFactory<>(consumerConfigurations(), stringDeserializer, jsonDeserializer);
+        DefaultKafkaConsumerFactory<String, TransacaoMessage> cf = new DefaultKafkaConsumerFactory<>(
+                consumerConfigurations(),
+                stringDeserializer,
+                jsonDeserializer);
+
+        cf.addListener(new MicrometerConsumerListener<>(meterRegistry,
+                                                        Collections.singletonList(new ImmutableTag("consumer", "transacao"))));
+
+        return cf;
     }
 
     @Bean
