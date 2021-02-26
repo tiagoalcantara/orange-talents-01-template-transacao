@@ -36,7 +36,7 @@ public class TransacoesController {
     }
 
     @ExceptionHandler({ ResponseStatusException.class })
-    public ResponseEntity<ErroResponse> responseStatusExceptionHandler(ResponseStatusException exception){
+    private ResponseEntity<ErroResponse> responseStatusExceptionHandler(ResponseStatusException exception){
         ErroResponse response = new ErroResponse(exception.getReason());
         return ResponseEntity.status(exception.getStatus()).body(response);
     }

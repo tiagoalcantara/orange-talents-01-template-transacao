@@ -4,6 +4,14 @@ public class CartaoMessage {
     private String id;
     private String email;
 
+    @Deprecated
+    public CartaoMessage(){}
+
+    public CartaoMessage(String id, String email) {
+        this.id = id;
+        this.email = email;
+    }
+
     public String getId() {
         return id;
     }

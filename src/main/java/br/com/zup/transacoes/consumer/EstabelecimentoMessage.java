@@ -5,6 +5,15 @@ public class EstabelecimentoMessage {
     private String cidade;
     private String endereco;
 
+    @Deprecated
+    public EstabelecimentoMessage(){}
+
+    public EstabelecimentoMessage(String nome, String cidade, String endereco) {
+        this.nome = nome;
+        this.cidade = cidade;
+        this.endereco = endereco;
+    }
+
     public String getNome() {
         return nome;
     }

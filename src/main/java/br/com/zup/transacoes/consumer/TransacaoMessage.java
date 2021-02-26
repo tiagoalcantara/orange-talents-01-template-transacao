@@ -11,6 +11,21 @@ public class TransacaoMessage {
     private CartaoMessage cartao;
     private LocalDateTime efetivadaEm;
 
+    @Deprecated
+    public TransacaoMessage(){}
+
+    public TransacaoMessage(UUID id,
+                            BigDecimal valor,
+                            EstabelecimentoMessage estabelecimento,
+                            CartaoMessage cartao,
+                            LocalDateTime efetivadaEm) {
+        this.id = id;
+        this.valor = valor;
+        this.estabelecimento = estabelecimento;
+        this.cartao = cartao;
+        this.efetivadaEm = efetivadaEm;
+    }
+
     public UUID getId() {
         return id;
     }
