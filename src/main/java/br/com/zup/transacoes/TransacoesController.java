@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/transacoes")
 public class TransacoesController {
-
     private final TransacaoRepository transacaoRepository;
     private static final Logger log = LoggerFactory.getLogger(TransacoesController.class);
 
@@ -43,7 +42,7 @@ public class TransacoesController {
     }
 
     static class ErroResponse {
-        private String erro;
+        private final String erro;
 
         public ErroResponse(String erro) {
             this.erro = erro;
